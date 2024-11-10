@@ -1,6 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using UnityEditor;
 
 public class Clicker : MonoBehaviour
 {
@@ -28,8 +29,13 @@ public class Clicker : MonoBehaviour
 
     private void Start() 
     {
-        audioSource = GetComponent<AudioSource>();
         shop = FindObjectOfType<Shop>();
+        
+        clicks = PlayerPrefs.GetInt("clicks", 0);
+        shop.chefCount = PlayerPrefs.GetInt("chef", 0);
+        audioSource = GetComponent<AudioSource>();
+        
+        
     }
     private void Update()
     {
@@ -65,5 +71,21 @@ public class Clicker : MonoBehaviour
             .ChangeStartValue(scale * Vector3.one)
             .SetEase(ease);
             //.SetLoops(2, LoopType.Yoyo);3
+    }
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+            Save();
+    }
+    private void OnApplicationQuit()
+    {
+        Save();
+    }
+
+    private void Save()
+    {
+        PlayerPrefs.SetInt("clicks", clicks);
+        
+        PlayerPrefs.Save();
     }
 }

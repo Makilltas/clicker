@@ -16,6 +16,10 @@ public class Shop : MonoBehaviour
 
     private void Start() 
     {
+        chefCount = PlayerPrefs.GetInt("chefCount", 0);
+        chefPrice = PlayerPrefs.GetInt("chefPrice", 50);
+        chefButton.UpdateText(chefPrice, chefCount);
+
         clicker = FindObjectOfType<Clicker>();
         chefButton.UpdateText(chefPrice, chefCount);
         InvokeRepeating("ChefClick", 0, chefClickTime);
@@ -41,5 +45,19 @@ public class Shop : MonoBehaviour
 
         clicker.clicks += chefClickValue * chefCount;
         UiManager.instance.UpdateClicks(clicker.clicks);
+    }
+
+    private void OnApplicationQuit()
+    {
+        Save();
+    }
+
+
+
+    public void Save()
+    {
+        PlayerPrefs.SetInt("chefCount", chefCount);
+        PlayerPrefs.SetInt("chefPrice", chefPrice);
+        PlayerPrefs.Save();
     }
 }
